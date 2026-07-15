@@ -4,7 +4,7 @@ public class BrokerInfo {
     private final int id;
     private final String host;
     private final int port;
-
+    // Constructor to initialize the broker
     public BrokerInfo (int id, String host, int port) {
         this.id =id;
         this.host=host;

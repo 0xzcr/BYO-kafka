@@ -15,22 +15,22 @@ public class Protocol {
     public static final byte CREATE_TOPIC = 0x04;
 
     // Broker response types
-    public static final byte PRODUCE_RESPONSE = 0x11;
+    public static final byte PRODUCE_RESPONSE = 0x11; // tell the client 'your message has been stored.'
     public static final byte FETCH_RESPONSE = 0x12;
     public static final byte METADATA_RESPONSE = 0x13;
     public static final byte CREATE_TOPIC_RESPONSE = 0x14;
     public static final byte ERROR_RESPONSE = 0x1F;
 
     // Internal broker communication
-    public static final byte REPLICATE = 0x21;
-    public static final byte REPLICATE_ACK = 0x22;
-    public static final byte TOPIC_NOTIFICATION = 0x23;
+    public static final byte REPLICATE = 0x21; // tell the follower broker - "store this message in your local log."
+    public static final byte REPLICATE_ACK = 0x22; //follower says 'replication succeed'
+    public static final byte TOPIC_NOTIFICATION = 0x23; // tell other brokers 'a new topic has been created'
 
     /**
      * Send an error response to the client
      */
     public static void sendErrorResponse(SocketChannel channel, String errorMessage) throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(3 + errorMessage.length());
+        ByteBuffer buffer = ByteBuffer.allocate(3 + errorMessage.length()); // a java byte is 1 byte and a short is 2 bytes; 1+2=3
         buffer.put(ERROR_RESPONSE);
         buffer.putShort((short) errorMessage.length());
         buffer.put(errorMessage.getBytes());
@@ -159,10 +159,10 @@ public class Protocol {
         }
 
         int messageCount = buffer.getInt();
-        byte[][] messages = new byte[messageCount][];
+        byte[][] messages = new byte[messageCount][]; //returns array message of byte arrays
 
         for (int i = 0; i < messageCount; i++) {
-            long offset = buffer.getLong(); // Skip offset
+            long offset = buffer.getLong(); // kip offset
             int messageSize = buffer.getInt();
             messages[i] = new byte[messageSize];
             buffer.get(messages[i]);
